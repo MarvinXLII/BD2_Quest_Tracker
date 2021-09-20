@@ -52,16 +52,18 @@ function removeAllChildren(parent) {
   }
 }
 
-function filterQuests(data, parent, string) {
+function filterQuests(data, parent, strings) {
   removeAllChildren(parent)
   for (let i=0; i<101; i++) {
     let key = ordering[i]
     let value = data[key]
-    if (value == string) {
-      if (key in quests) {
-	const li = document.createElement("p");
-	li.textContent = quests[key].index + ":  " + quests[key].name
-	parent.append(li)
+    for (let j=0; j<strings.length; j++) {
+      if (value == strings[j]) {
+	if (key in quests) {
+	  const li = document.createElement("p");
+	  li.textContent = quests[key].index + ":  " + quests[key].name
+	  parent.append(li)
+	}
       }
     }
   }
@@ -105,8 +107,8 @@ function loadData(buffer) {
     data[y1] = z
   }
 
-  filterQuests(data, ulElAcc, 'AlreadyPlayedAcceptEvent')
-  filterQuests(data, ulElNot, 'NotYetAccept')
-  filterQuests(data, ulElClear, 'Clear')
+  filterQuests(data, ulElAcc, ['InProgress'])
+  filterQuests(data, ulElNot, ['NotYetAccept', 'AlreadyPlayedAcceptEvent'])
+  filterQuests(data, ulElClear, ['Clear'])
 
 }
