@@ -76,9 +76,21 @@ function filterQuests(data, parent, strings) {
   }
 }
 
+function decompressData(buffer) {
+  const inflator = new pako.Inflate();
+  let i = 0;
+  while (!inflator.ended) {
+    inflator.push(buffer.slice(i, i+1));
+    i += 1;
+  }
+  return inflator.result;
+}
+
+
 function loadData(buffer) {
   var compressed = buffer.slice(0xc, buffer.byteLength)
-  var decompressed = pako.inflate(compressed);
+  // var decompressed = pako.inflate(compressed);
+  var decompressed = decompressData(compressed);
 
   var x = "QuestStateList"
   var result = new Uint8Array(x.length);
@@ -117,5 +129,5 @@ function loadData(buffer) {
   filterQuests(data, ulElAcc, ['InProgress'])
   filterQuests(data, ulElNot, ['NotYetAccept', 'AlreadyPlayedAcceptEvent'])
   filterQuests(data, ulElClear, ['Clear'])
-
+  console.log("TOTAL COUNT:", ulElAcc.childNodes.length + ulElNot.childNodes.length + ulElClear.childNodes.length)
 }
