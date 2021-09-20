@@ -11,7 +11,14 @@ function handleFileSelect(evt) {
   var reader = new FileReader();
   reader.readAsArrayBuffer(files[0]);
   reader.onload = function() {
-    loadData(reader.result)
+    try {
+      loadData(reader.result)
+    } catch (error) {
+      console.log(error)
+      removeAllChildren(ulElAcc);
+      removeAllChildren(ulElNot);
+      removeAllChildren(ulElClear);
+    }
   }
 }
 document.getElementById('files').addEventListener('change', handleFileSelect, false);
